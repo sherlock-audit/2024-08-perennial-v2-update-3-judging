@@ -557,7 +557,7 @@ after collateral:6250000009384
 Source: https://github.com/sherlock-audit/2024-08-perennial-v2-update-3-judging/issues/52 
 
 ## Found by 
-Nyx, bin2chen, eeyore, neko\_nyaa, oot2k, panprog, volodya
+Nyx, bin2chen, eeyore, neko\_nyaa, oot2k, panprog, silver\_eth, volodya
 ## Summary
 
 An attacker can set himself as an `extension`, which is an `allowed protocol-wide operator`. As such, he can act on an account's behalf in all its positions and, for example, withdraw its collateral.
@@ -687,32 +687,7 @@ Not needed.
 **Mitigation**
 Add sanity check for `staleAfter` risk parameter.
 
-# Issue H-7: There is insufficient access control on updating an account position 
-
-Source: https://github.com/sherlock-audit/2024-08-perennial-v2-update-3-judging/issues/83 
-
-## Found by 
-silver\_eth
-this is the check to ensure only authorized can modify a position
-https://github.com/sherlock-audit/2024-08-perennial-v2-update-3/blob/main/perennial-v2/packages/perennial/contracts/libs/InvariantLib.sol#L78-L82
-hoevere that check is done here 
-https://github.com/sherlock-audit/2024-08-perennial-v2-update-3/blob/main/perennial-v2/packages/perennial/contracts/Market.sol#L501-L502
-which calls this 
-https://github.com/sherlock-audit/2024-08-perennial-v2-update-3/blob/main/perennial-v2/packages/perennial/contracts/MarketFactory.sol#L77-L88
-the issue is anybody can make themselves an extension for an account
-https://github.com/sherlock-audit/2024-08-perennial-v2-update-3/blob/main/perennial-v2/packages/perennial/contracts/MarketFactory.sol#L100-L103
-
-effectively making them an operator thus allowing them to modify a position and withdraw the accouns collateral 
-
-
-
-## Discussion
-
-**arjun-io**
-
-Appears to be a duplicate of https://github.com/sherlock-audit/2024-08-perennial-v2-update-3-judging/issues/52
-
-# Issue H-8: Perennial account users with rebalance group may suffer a donation attack 
+# Issue H-7: Perennial account users with rebalance group may suffer a donation attack 
 
 Source: https://github.com/sherlock-audit/2024-08-perennial-v2-update-3-judging/issues/84 
 
@@ -872,6 +847,16 @@ _No response_
 ### Mitigation
 
 There should be a minimum rebalance value check to prevent this issue and prevent users pay more keeper fee than the rebalanced margin when margin is tiny.
+
+
+
+## Discussion
+
+**sherlock-admin2**
+
+The protocol team fixed this issue in the following PRs/commits:
+https://github.com/equilibria-xyz/perennial-v2/pull/450
+
 
 # Issue M-1: `MultiInvoker` and `Manager` orders execution can be DOS in key moments if AAVE/Compound utilization is at 100% 
 
@@ -1686,9 +1671,21 @@ _No response_
     }
 ```
 
+
+
+## Discussion
+
+**arjun-io**
+
+This is valid in that the calculation for the current position might be off, but instead of using the pending and updating, we need to actually calculate the closeable amount.
+
+For example, if there is a current position of 5 long, and a pending open of 10 - passing in the close magic value will only close 5 (not 15). if there is a current position of 5 long, and a pending _close_ of 3 - passing in the close magic value will only close 2 (this is not captured by the current logic).
+
 # Issue M-12: Emptyset reserve strategies may revert when aave/compound supply limit is reached or pool owner pause/froze the pool 
 
 Source: https://github.com/sherlock-audit/2024-08-perennial-v2-update-3-judging/issues/66 
+
+The protocol has acknowledged this issue.
 
 ## Found by 
 Oblivionis
