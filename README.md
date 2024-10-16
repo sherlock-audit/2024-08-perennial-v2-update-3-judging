@@ -2,6 +2,8 @@
 
 Source: https://github.com/sherlock-audit/2024-08-perennial-v2-update-3-judging/issues/27 
 
+The protocol has acknowledged this issue.
+
 ## Found by 
 panprog
 **Summary**
@@ -214,9 +216,21 @@ Not needed.
 1. Force coordinator time lock, so that all users know well in advance of incoming market parameters changes
 2. Optionally add some sanity upside limit to margin, maintenance, minMargin and minMaintenance (set via protocolParameters).
 
+
+
+## Discussion
+
+**sherlock-admin2**
+
+The protocol team fixed this issue in the following PRs/commits:
+https://github.com/equilibria-xyz/perennial-v2/pull/464
+
+
 # Issue H-3: Market coordinator can steal all market collateral by abusing very low value of `scale` 
 
 Source: https://github.com/sherlock-audit/2024-08-perennial-v2-update-3-judging/issues/40 
+
+The protocol has acknowledged this issue.
 
 ## Found by 
 panprog
@@ -552,6 +566,20 @@ after collateral:6250000009384
 
 `intent.price - lastVersion.price` needs to be within a reasonable range and the difference must not be too large. And the difference needs to be secured by collateral.
 
+
+
+## Discussion
+
+**sherlock-admin2**
+
+The protocol team fixed this issue in the following PRs/commits:
+https://github.com/equilibria-xyz/perennial-v2/pull/466
+
+
+**arjun-io**
+
+Note: Since the recommended by panprog here: https://github.com/sherlock-audit/2024-08-perennial-v2-update-3-judging/issues/14 has two parts (checking collateral delta and limiting intent price deviation) we opted to implement the fixes in two PRs - however Sherlock's dashboard doesn't support two fix PRs for the same repo so linking the other fix as a comment here: https://github.com/equilibria-xyz/perennial-v2/pull/468
+
 # Issue H-5: Lack of access control in the `MarketFactory.updateExtension()` function. 
 
 Source: https://github.com/sherlock-audit/2024-08-perennial-v2-update-3-judging/issues/52 
@@ -686,6 +714,16 @@ Not needed.
 
 **Mitigation**
 Add sanity check for `staleAfter` risk parameter.
+
+
+
+## Discussion
+
+**sherlock-admin2**
+
+The protocol team fixed this issue in the following PRs/commits:
+https://github.com/equilibria-xyz/perennial-v2/pull/463
+
 
 # Issue H-7: Perennial account users with rebalance group may suffer a donation attack 
 
@@ -929,6 +967,16 @@ Not needed
 **Mitigation**
 It's probably impossible to do anything in such circumstances to convert `DSU` to `USDC`, however it's still possible to keep orders execution, keeping all funds in `DSU`. So one possible mitigation is to force all interface fee to be in `DSU` only (so remove the `unwrap` field from interface fee). Alternatively, if some interfaces only support USDC, maybe accumulate their fee in `DSU` and let them manually claim USDC if needed (so that it's not time-critical and can be done when unwrapping is available again)
 
+
+
+## Discussion
+
+**sherlock-admin2**
+
+The protocol team fixed this issue in the following PRs/commits:
+https://github.com/equilibria-xyz/perennial-v2/pull/461
+
+
 # Issue M-2: `MultiInvoker`, `Manager` and `Account` unexpected reverts in certain conditions due to AAVE reverting on deposits and withdrawals with 0 amount 
 
 Source: https://github.com/sherlock-audit/2024-08-perennial-v2-update-3-judging/issues/18 
@@ -1014,6 +1062,16 @@ Not needed
 
 **Mitigation**
 Convert difference of `target` and `collateral` to `Fixed6` and compare it to 0, instead of directly comparing `target` with `collateral` in AAVE strategy.
+
+
+
+## Discussion
+
+**sherlock-admin2**
+
+The protocol team fixed this issue in the following PRs/commits:
+https://github.com/equilibria-xyz/emptyset-mono/pull/14
+
 
 # Issue M-3: `Controller`'s core function of Rebalance will not rebalance when rebalance is needed in some cases, breaking core functionality 
 
@@ -1157,6 +1215,16 @@ _No response_
     }
 ```
 
+
+
+## Discussion
+
+**sherlock-admin2**
+
+The protocol team fixed this issue in the following PRs/commits:
+https://github.com/equilibria-xyz/perennial-v2/pull/456
+
+
 # Issue M-5: when ReserveBase undercollateralized , Manager.orders will not be able to execute 
 
 Source: https://github.com/sherlock-audit/2024-08-perennial-v2-update-3-judging/issues/35 
@@ -1220,6 +1288,16 @@ _No response_
 +       USDC.push(receiver, UFixed6Lib.from(reserve.redeem(amount)));
     }
 ```
+
+
+
+## Discussion
+
+**sherlock-admin2**
+
+The protocol team fixed this issue in the following PRs/commits:
+https://github.com/equilibria-xyz/perennial-v2/pull/458
+
 
 # Issue M-6: _ineligible() redemptionEligible is miscalculated 
 
@@ -1293,6 +1371,16 @@ _No response_
     }
 ```
 
+
+
+## Discussion
+
+**sherlock-admin2**
+
+The protocol team fixed this issue in the following PRs/commits:
+https://github.com/equilibria-xyz/perennial-v2/pull/460
+
+
 # Issue M-7: Market coordinator can set proportional and adiabatic fees much higher than limited by protocol due to fixed point truncation 
 
 Source: https://github.com/sherlock-audit/2024-08-perennial-v2-update-3-judging/issues/41 
@@ -1340,6 +1428,16 @@ Not needed.
 
 **Mitigation**
 Truncate both `makerLimit` and all `scale`s before validating them (or do not truncate at all as more than integer precision might be required for high-price token markets)
+
+
+
+## Discussion
+
+**sherlock-admin2**
+
+The protocol team fixed this issue in the following PRs/commits:
+https://github.com/equilibria-xyz/perennial-v2/pull/465
+
 
 # Issue M-8: Corrupted storage after upgrade in the `MarketFactory` contract. 
 
@@ -1396,6 +1494,16 @@ Manual Review
 ## Recommendation
 
 Place the `extensions` mapping after the `_referralFees` mapping so that both `extensions` and `signers` are added after all the occupied slots, avoiding storage corruption.
+
+
+
+## Discussion
+
+**sherlock-admin2**
+
+The protocol team fixed this issue in the following PRs/commits:
+https://github.com/equilibria-xyz/perennial-v2/pull/462
+
 
 # Issue M-9: Anyone can cancel other accounts `nonces` and `groups`, leading to griefing their `Intents`. 
 
@@ -1465,6 +1573,21 @@ Manual Review
 ## Recommendation
 
 Add additional validation to ensure that `common.signer` is an allowed signer for `common.account`.
+
+
+
+## Discussion
+
+**sherlock-admin2**
+
+The protocol team fixed this issue in the following PRs/commits:
+https://github.com/equilibria-xyz/perennial-v2/pull/444
+https://github.com/equilibria-xyz/root/pull/104
+
+
+**arjun-io**
+
+Note that in addition to the above PR, there is a 1-line update to the `root` package to enable this fix: https://github.com/equilibria-xyz/root/pull/104
 
 # Issue M-10: The `Market.migrate()` function has no effect and does not migrate `PositionStorageGlobal` to the new storage layout, breaking the migration assumption. 
 
@@ -1612,6 +1735,16 @@ It is also advisable to clear the old `maker` in the `migrate()` function:
     }
 ```
 
+
+
+## Discussion
+
+**sherlock-admin2**
+
+The protocol team fixed this issue in the following PRs/commits:
+https://github.com/equilibria-xyz/perennial-v2/pull/442
+
+
 # Issue M-11: TriggerOrder.notionalValue() Using the wrong latestPositionLocal to calculate the value causes the user to overpay fees 
 
 Source: https://github.com/sherlock-audit/2024-08-perennial-v2-update-3-judging/issues/62 
@@ -1680,6 +1813,36 @@ _No response_
 This is valid in that the calculation for the current position might be off, but instead of using the pending and updating, we need to actually calculate the closeable amount.
 
 For example, if there is a current position of 5 long, and a pending open of 10 - passing in the close magic value will only close 5 (not 15). if there is a current position of 5 long, and a pending _close_ of 3 - passing in the close magic value will only close 2 (this is not captured by the current logic).
+
+**sherlock-admin2**
+
+The protocol team fixed this issue in the following PRs/commits:
+https://github.com/equilibria-xyz/perennial-v2/pull/455
+
+
+**panprog**
+
+While the fix solves the issue described here (pending position decrease makes fee incorrect), the opposite case is still/now wrong (pending position increase makes fee incorrect / reverts the execution). So example scenario:
+- User has position = 100
+- User adds trigger order to close position
+- User increases position to 150
+- Trigger order executes while increase is still pending: it charges a fee of `150 * interfaceFee` and tries to `market.update(0,0,0)`, which reverts, because it tries to decrease full position of 150, but only 100 is closable due to 50 still pending.
+
+To fully fix this one:
+- Use `MAGIC_VALUE_FULLY_CLOSED_POSITION` when executing market.update for orders with `delta = MAGIC_VALUE_CLOSE_POSITION`
+- For the interface fee - you have to calculate actual closable instead of latest or current position: `closable = latestPosition - pending.neg`
+
+**EdNoepel**
+
+Pending position increase is not possible with the current implementation.
+- The problem with `MAGIC_VALUE_FULLY_CLOSED_POSITION` is that it is only designed to prevent over-closing the position.  If we have a position and a pending positive position, it will not actually 0 the position as desired.  Created [this branch](https://github.com/equilibria-xyz/perennial-v2/commit/2615f3e20a5d2d61fc351839eeaa54920f958675) to illustrate the behavior with your recommendation.  For this use case, a revert is more desirable.
+- The current implementation uses 0 such that closing with a pending positive position will revert instead of silently leaving the position open.  This provides more desirable UX/DX.  I created [this branch](https://github.com/equilibria-xyz/perennial-v2/commit/dfdc2942e14d8e5a940956f3fd53f4fd1ace4dec) to show the only affected unit test is one which [reverts](https://github.com/equilibria-xyz/perennial-v2/blob/v2.3-fix-review/packages/perennial-order/test/integration/Manager_Arbitrum.test.ts#L888) as an integration test.
+
+Note that changing the behavior of _Market_'s `MAGIC_VALUE_FULLY_CLOSED_POSITION` seems out-of-scope for this release.
+
+**panprog**
+
+Ok, got it. So it's a design choice, so there is no issue with it. This issue is fixed then.
 
 # Issue M-12: Emptyset reserve strategies may revert when aave/compound supply limit is reached or pool owner pause/froze the pool 
 
@@ -1834,6 +1997,31 @@ Manual Review
 
 The protocol-wide `maxFeeAbsolute` value needs to be enforced across the markets. The `liquidationFee` should be validated as a percentage value.
 
+
+
+## Discussion
+
+**sherlock-admin2**
+
+The protocol team fixed this issue in the following PRs/commits:
+https://github.com/equilibria-xyz/perennial-v2/pull/459
+
+
+**panprog**
+
+The fix has removed the requirement of `minMaintenance >= liquidationFee`, which opens up the following attack scenario for the  Coordinator:
+- set `minMaintenance = minMargin = 0`
+- set `liquidationFee = protocol.maxLiquidationFee`, settlement
+- open a lot of tiny positions with collateral at almost 0 + settlement fee
+- either wait or intentionally make positions liquidatable and liquidate them, getting the liquidation fee, which is higher than settlement fee used to open it, so it's profitable
+- all tiny position accounts are in bad debt due to liquidation fee being higher than their remaining collateral.
+
+Recommendation: add the requirement for minMaintenance. Not sure if the settlement fee is available at that point (in risk parameter validation), if not, then introduce a minMaintenance and/or minMargin protocol parameter.
+
+**arjun-io**
+
+Thanks for outlining this attack vector @panprog - we're going to skip the fix for this malicious coordinator case for this audit but we'll circle back on it for future updates.
+
 # Issue M-14: Keepers can lose compensation fee 
 
 Source: https://github.com/sherlock-audit/2024-08-perennial-v2-update-3-judging/issues/79 
@@ -1907,4 +2095,30 @@ Manual Review
 
 ## Recommendation
 Add a minimum fee parameter to the executeOrder function to ensure that the compensation fee is not less than what keepers want.
+
+
+
+## Discussion
+
+**sherlock-admin2**
+
+The protocol team fixed this issue in the following PRs/commits:
+https://github.com/equilibria-xyz/perennial-v2/pull/453
+
+
+**panprog**
+
+Fix review:
+
+Still not fixed. The order's `maxFee` can still be reduced, because the check only requires a different fee if previous order is not empty. The user can easily bypass this check by placing order with the same orderId twice in the same transaction:
+- place empty order with the same maxFee as old order. The order is considered empty if `side=comparison=price=delta=0`, so `maxFee` can remain the same to successfully replace it.
+- place "old" order with smaller fee
+
+**EdNoepel**
+
+How would they empty the previous order though?  An attempt to replace with an empty order with same maxFee would revert with `TriggerOrderInvalidError`.  Example unit test: https://github.com/equilibria-xyz/perennial-v2/commit/86ee6d9a67e0e7c14aaa6708f71185f168b37b56
+
+**panprog**
+
+@EdNoepel Sorry, my bad, didn't check that `store` validates this. It's fixed then.
 
